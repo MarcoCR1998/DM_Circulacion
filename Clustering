@@ -57,4 +57,4 @@ plt.show()
 data.to_csv('resultado_clusters.csv', index=False)
 print("Clustering completado. Los resultados se han guardado en 'resultado_clusters.csv'.")
 
-# %%
+
