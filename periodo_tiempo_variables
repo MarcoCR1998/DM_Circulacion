@@ -1,0 +1,60 @@
+#%%
+# Mapeo general 
+import pandas as pd
+
+# Cargar la base de datos (reemplaza 'tu_archivo.csv' con el nombre real)
+df = pd.read_csv('hoja_madre.csv', parse_dates=['fecha_edicion'])
+
+# Obtener el rango de fechas para cada variable (excluyendo la columna 'fecha_edicion')
+columnas = [col for col in df.columns if col != 'fecha_edicion']
+
+# Crear un DataFrame para almacenar los rangos de fechas
+rangos = []
+
+for col in columnas:
+    # Filtrar solo las filas donde la variable tiene valores no nulos
+    fechas_validas = df.loc[df[col].notna(), 'fecha_edicion']
+    
+    if not fechas_validas.empty:
+        min_fecha = fechas_validas.min()
+        max_fecha = fechas_validas.max()
+        rangos.append([col, min_fecha, max_fecha])
+
+# Convertir a DataFrame
+df_rangos = pd.DataFrame(rangos, columns=['Variable', 'Fecha Inicio', 'Fecha Fin'])
+
+# Mostrar la tabla con los rangos de fechas
+print(df_rangos)
+
+#%%
+# Mapeo solo para dummies
+import pandas as pd
+
+# Cargar la base de datos (asegurar que 'fecha_edicion' sea tipo fecha)
+df = pd.read_csv('hoja_madre.csv', parse_dates=['fecha_edicion'])
+
+# Lista de variables dummies que quieres analizar
+dummies = [
+    'Feriados', 'nor_viaje', 'nor_comida', 'nor_electro', 'nd_agregado', 
+    'nor_vehiculo', 'nd_electro', 'nd_concierto', 'nd_vehiculo', 'nor_canastabasica',
+    'nor_efectivo', 'nor_conmemorativo', 'nor_agregado', 'nd_efectivo', 
+    'nd_juguetes', 'nd_futbol', 'gratuito'
+]
+
+# DataFrame para almacenar los rangos de fechas
+rangos_dummies = []
+
+for col in dummies:
+    # Filtrar solo las fechas donde la variable es 1
+    fechas_con_1 = df.loc[df[col] == 1, 'fecha_edicion']
+    
+    if not fechas_con_1.empty:
+        min_fecha = fechas_con_1.min()
+        max_fecha = fechas_con_1.max()
+        rangos_dummies.append([col, min_fecha, max_fecha])
+
+# Convertir a DataFrame
+df_rangos_dummies = pd.DataFrame(rangos_dummies, columns=['Variable', 'Fecha Inicio', 'Fecha Fin'])
+
+# Mostrar la tabla con los rangos de fechas de las variables dummies
+print(df_rangos_dummies)
